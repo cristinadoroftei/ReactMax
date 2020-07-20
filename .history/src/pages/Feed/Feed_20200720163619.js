@@ -72,7 +72,7 @@ class Feed extends Component {
       }
       `,
       variables: {
-        page: page
+
       }
     }
     fetch('http://localhost:8080/graphql', {
