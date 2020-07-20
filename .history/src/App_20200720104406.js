@@ -79,13 +79,13 @@ class App extends Component {
 
     })
       .then(res => {
-        if (res.errors && res.errors[0].status === 422) {
+        if (resData.errors && resData.errors[0].status === 422) {
           throw new Error(
             "Validation failed. Make sure the email address isn't used yet!"
           );
         }
 
-        if (res.errors) {
+        if (resData.errors) {
           throw new Error('User login failed!');
         }
         return res.json();
@@ -96,10 +96,10 @@ class App extends Component {
           isAuth: true,
           token: resData.data.logintoken,
           authLoading: false,
-          userId: resData.data.login.userId
+          userId: resData.userId
         });
-        localStorage.setItem('token', resData.data.login.token);
-        localStorage.setItem('userId', resData.data.login.userId);
+        localStorage.setItem('token', resData.token);
+        localStorage.setItem('userId', resData.userId);
         const remainingMilliseconds = 60 * 60 * 1000;
         const expiryDate = new Date(
           new Date().getTime() + remainingMilliseconds

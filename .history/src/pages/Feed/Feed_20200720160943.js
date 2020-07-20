@@ -146,7 +146,7 @@ class Feed extends Component {
     }
     // Set up data (with image!)
 
-    return fetch('http://localhost:8080/post-image', {
+    fetch('http://localhost:8080/post-image', {
       method: 'PUT',
       headers: {
         Authorization: 'Bearer ' + this.props.token
@@ -157,10 +157,10 @@ class Feed extends Component {
     .then(res => {
       return res.json()
     })
-    .then((fileResData) => {
+    .then(fileResData => {
       console.log(fileResData)
-      const imageUrl = fileResData.filePath;
-      console.log('Image url is: ' + imageUrl)
+      const imageUrl = fileResData.filePath.replace(/\//g, '_');
+      console.log('Image url is: ')
       let graphqlQuery = {
         query: `
         mutation{

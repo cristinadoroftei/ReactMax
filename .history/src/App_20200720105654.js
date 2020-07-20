@@ -79,7 +79,7 @@ class App extends Component {
 
     })
       .then(res => {
-        if (res.errors && res.errors[0].status === 422) {
+        if (res.errors && resData.errors[0].status === 422) {
           throw new Error(
             "Validation failed. Make sure the email address isn't used yet!"
           );

@@ -146,7 +146,7 @@ class Feed extends Component {
     }
     // Set up data (with image!)
 
-    return fetch('http://localhost:8080/post-image', {
+    fetch('http://localhost:8080/post-image', {
       method: 'PUT',
       headers: {
         Authorization: 'Bearer ' + this.props.token
@@ -157,10 +157,9 @@ class Feed extends Component {
     .then(res => {
       return res.json()
     })
-    .then((fileResData) => {
+    .then(fileResData => {
       console.log(fileResData)
       const imageUrl = fileResData.filePath;
-      console.log('Image url is: ' + imageUrl)
       let graphqlQuery = {
         query: `
         mutation{
@@ -188,7 +187,7 @@ class Feed extends Component {
       })
     })
       .then(res => {
-        console.log(res)
+        
         if (res.errors && res.errors[0].status === 422) {
           throw new Error(
             "Validation failed. Make sure the email address isn't used yet!"

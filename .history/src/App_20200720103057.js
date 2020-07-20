@@ -62,7 +62,7 @@ class App extends Component {
     this.setState({ authLoading: true });
     const graphqlQuery = {
       query: `
-      {
+      query{
         login(email: "${authData.email}", password: "${authData.password}"){
           token
           userId
@@ -75,18 +75,18 @@ class App extends Component {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(graphqlQuery)
+      body: JSON.stringify({
+        
+      })
 
     })
       .then(res => {
-        if (res.errors && res.errors[0].status === 422) {
-          throw new Error(
-            "Validation failed. Make sure the email address isn't used yet!"
-          );
+        if (res.status === 422) {
+          throw new Error('Validation failed.');
         }
-
-        if (res.errors) {
-          throw new Error('User login failed!');
+        if (res.status !== 200 && res.status !== 201) {
+          console.log('Error!');
+          throw new Error('Could not authenticate you!');
         }
         return res.json();
       })
@@ -94,12 +94,12 @@ class App extends Component {
         console.log(resData);
         this.setState({
           isAuth: true,
-          token: resData.data.logintoken,
+          token: resData.token,
           authLoading: false,
-          userId: resData.data.login.userId
+          userId: resData.userId
         });
-        localStorage.setItem('token', resData.data.login.token);
-        localStorage.setItem('userId', resData.data.login.userId);
+        localStorage.setItem('token', resData.token);
+        localStorage.setItem('userId', resData.userId);
         const remainingMilliseconds = 60 * 60 * 1000;
         const expiryDate = new Date(
           new Date().getTime() + remainingMilliseconds

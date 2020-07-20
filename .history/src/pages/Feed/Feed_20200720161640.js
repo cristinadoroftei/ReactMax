@@ -157,7 +157,7 @@ class Feed extends Component {
     .then(res => {
       return res.json()
     })
-    .then((fileResData) => {
+    .then(async (fileResData) => {
       console.log(fileResData)
       const imageUrl = fileResData.filePath;
       console.log('Image url is: ' + imageUrl)

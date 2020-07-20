@@ -146,21 +146,19 @@ class Feed extends Component {
     }
     // Set up data (with image!)
 
-    return fetch('http://localhost:8080/post-image', {
+    fetch('http://localhost:8080/post-image', {
       method: 'PUT',
       headers: {
-        Authorization: 'Bearer ' + this.props.token
-
+        Authorization: 'Bearer ' + this.props.token,
+        'Content-Type': 'application/json'
       },
       body: formData
     })
     .then(res => {
       return res.json()
     })
-    .then((fileResData) => {
-      console.log(fileResData)
+    .then(fileResData => {
       const imageUrl = fileResData.filePath;
-      console.log('Image url is: ' + imageUrl)
       let graphqlQuery = {
         query: `
         mutation{
@@ -188,7 +186,6 @@ class Feed extends Component {
       })
     })
       .then(res => {
-        console.log(res)
         if (res.errors && res.errors[0].status === 422) {
           throw new Error(
             "Validation failed. Make sure the email address isn't used yet!"

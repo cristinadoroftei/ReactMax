@@ -65,7 +65,6 @@ class Feed extends Component {
               name
             }
             createdAt
-            imageUrl
           }
           totalPosts
         }
@@ -142,53 +141,36 @@ class Feed extends Component {
     const formData = new FormData();
     formData.append('image', postData.image)
     if(this.state.editPost) {
-      formData.append('oldPath', this.state.editPost.imagePath)
+      formData.append
     }
     // Set up data (with image!)
 
-    return fetch('http://localhost:8080/post-image', {
-      method: 'PUT',
-      headers: {
-        Authorization: 'Bearer ' + this.props.token
-
-      },
-      body: formData
-    })
-    .then(res => {
-      return res.json()
-    })
-    .then((fileResData) => {
-      console.log(fileResData)
-      const imageUrl = fileResData.filePath;
-      console.log('Image url is: ' + imageUrl)
-      let graphqlQuery = {
-        query: `
-        mutation{
-          createPost(postInput: {title: "${postData.title}", content: "${postData.content}", imageUrl:"${imageUrl}"}){
-            _id
-            title
-            content
-            imageUrl
-            creator {
-              name
-            }
-            createdAt
+    let graphqlQuery = {
+      query: `
+      mutation{
+        createPost(postInput: {title: "${postData.title}", content: "${postData.content}", imageUrl:"some url"}){
+          _id
+          title
+          content
+          imageUrl
+          creator {
+            name
           }
+          createdAt
         }
-        `
       }
-  
-      return fetch('http://localhost:8080/graphql', {
-        method: 'POST',
-        body: JSON.stringify(graphqlQuery),
-        headers: {
-          Authorization: 'Bearer ' + this.props.token,
-          'Content-Type': 'application/json'
-        }
-      })
+      `
+    }
+
+    fetch('http://localhost:8080/graphql', {
+      method: 'POST',
+      body: JSON.stringify(graphqlQuery),
+      headers: {
+        Authorization: 'Bearer ' + this.props.token,
+        'Content-Type': 'application/json'
+      }
     })
       .then(res => {
-        console.log(res)
         if (res.errors && res.errors[0].status === 422) {
           throw new Error(
             "Validation failed. Make sure the email address isn't used yet!"
@@ -207,8 +189,7 @@ class Feed extends Component {
           title: resData.data.createPost.title,
           content: resData.data.createPost.content,
           creator: resData.data.createPost.creator,
-          createdAt: resData.data.createPost.createdAt,
-          imagePath: resData.data.createPost.imageUrl
+          createdAt: resData.data.createPost.createdAt
         };
         this.setState(prevState => {
           let updatedPosts = [...prevState.posts];
